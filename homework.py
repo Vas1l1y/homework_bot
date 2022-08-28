@@ -33,8 +33,7 @@ messages_error = []
 
 
 def send_message(bot, message_tg):
-    """Отправляет сообщение в Telegram чат,
-    определяемый переменной окружения TELEGRAM_CHAT_ID"""
+    """Отправляет сообщение в Telegram чат"""
     bot.send_message(
         chat_id=TELEGRAM_CHAT_ID,
         text=message_tg
@@ -44,8 +43,8 @@ def send_message(bot, message_tg):
 def get_api_answer(current_timestamp):
     """Делает запрос эндпоинту API-сервиса.
     Параметр - временная метка.
-    В случае успешного запроса должна вернуть ответ API,
-    преобразовав из JSON в Python."""
+    В случае успешного запроса должна вернуть ответ API.
+    Преобразовав из JSON в Python."""
     timestamp = current_timestamp or int(time.time())
     params = {'from_date': timestamp}
     response = requests.get(ENDPOINT, headers=HEADERS, params=params)
@@ -62,14 +61,14 @@ def get_api_answer(current_timestamp):
 
 
 def check_response(response):
-    """Проверяет ответ API на корректность"""
+    """Проверяет ответ API на корректность."""
     try:
         homeworks = response['homeworks']
         # pprint(homeworks)
         # print(type(homeworks))
         # homeworks = response.get('homeworks')
     except (isinstance(response, dict)):
-        message_err = f'Ответ сервера не является словарем!'
+        message_err = 'Ответ сервера не является словарем!'
         if message_err not in messages_error:
             messages_error.append(message_err)
         logger.error(message_err)
@@ -90,8 +89,7 @@ def check_response(response):
 
 
 def parse_status(homework):
-    """Извлекает из информации о конкретной домашней работе
-    статус этой работы"""
+    """Извлекает из информации о конкретной домашке статус работы."""
     # pprint(homework)
     # print(type(homework))
     # verdict = ''
@@ -113,21 +111,21 @@ def parse_status(homework):
             logger.error(message_err)
             raise ValueError(message_err)
         verdict = HOMEWORK_STATUSES[homework_status]
-        message_tg = f'Изменился статус проверки работы "{homework_name}". {verdict}'
+        message_tg = (f'Изменился статус проверки работы '
+                      f'"{homework_name}". {verdict}')
         return message_tg
     else:
-        list_empty = (f'С возвращением, Сер! '
-                      f'Все системы запущены и работают в штатном режиме. '
-                      f'Пока список пуст, ожидаем проверки. '
-                      f'Как изменится статус, я сообщу. '
-                      f'Хорошего дня!'
+        list_empty = ('С возвращением, Сер! '
+                      'Все системы запущены и работают в штатном режиме. '
+                      'Пока список пуст, ожидаем проверки. '
+                      'Как изменится статус, я сообщу. '
+                      'Хорошего дня!'
                       )
         return list_empty
 
 
 def check_tokens():
-    """Проверяет доступность переменных окружения,
-    которые необходимы для работы программы"""
+    """Проверяет доступность переменных окружения."""
     if PRACTICUM_TOKEN:
         if TELEGRAM_TOKEN:
             if TELEGRAM_CHAT_ID:
