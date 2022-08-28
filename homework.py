@@ -1,13 +1,14 @@
 import logging
+
 import os
 
 import requests
 import time
 import telegram
 from dotenv import load_dotenv
-import app_logger
+# import app_logger
 
-logger = app_logger.get_logger(__name__)
+
 
 load_dotenv()
 
@@ -30,6 +31,24 @@ HOMEWORK_STATUSES = {
 
 messages_error = []
 
+formatter = (
+    '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+
+
+def get_stream_handler():
+    stream_handler = logging.StreamHandler()
+    stream_handler.setLevel(logging.DEBUG)
+    stream_handler.setFormatter(logging.Formatter(formatter))
+    return stream_handler
+
+
+def get_logger(name):
+    logger = logging.getLogger(name)
+    logger.setLevel(logging.DEBUG)
+    logger.addHandler(get_stream_handler())
+    return logger
+
 
 def send_message(bot, message_tg):
     """Отправляет сообщение в Telegram чат."""
@@ -37,7 +56,7 @@ def send_message(bot, message_tg):
         chat_id=TELEGRAM_CHAT_ID,
         text=message_tg
     )
-
+logger = get_logger(__name__)
 
 def get_api_answer(current_timestamp):
     """Делает запрос эндпоинту API-сервиса.
@@ -146,39 +165,39 @@ def main():
     statuses = []
 
     while True:
-        if check_tokens():
-            try:
-                response = get_api_answer(current_timestamp)
-                homework = check_response(response)
-                message_tg = parse_status(homework)
-                status = message_tg
-                statuses.append(status)
-                if len(statuses) > 2:
-                    del statuses[0]
-                if statuses[0] != statuses[-1]:
-                    try:
-                        send_message(bot, message_tg)
-                        logger.info('Удачная отправка сообщения со статусом')
-                    except RuntimeError:
-                        message_err = 'Сбой при отправке сообщения со статусом'
-                        if message_err not in messages_error:
-                            messages_error.append(message_err)
-                        logger.error(message_err)
-                        RuntimeError(message_err)
-                        # send_message(bot, error)
-                current_timestamp = response['current_date']
-                # time.sleep(run_time_10)
-                time.sleep(RETRY_TIME)
+        try:
+            check_tokens()
+            response = get_api_answer(current_timestamp)
+            homework = check_response(response)
+            message_tg = parse_status(homework)
+            status = message_tg
+            statuses.append(status)
+            if len(statuses) > 2:
+                del statuses[0]
+            if statuses[0] != statuses[-1]:
+                try:
+                    send_message(bot, message_tg)
+                    logger.info('Удачная отправка сообщения со статусом')
+                except RuntimeError:
+                    message_err = 'Сбой при отправке сообщения со статусом'
+                    if message_err not in messages_error:
+                        messages_error.append(message_err)
+                    logger.error(message_err)
+                    RuntimeError(message_err)
+                    # send_message(bot, error)
+            current_timestamp = response['current_date']
+            # time.sleep(run_time_10)
+            time.sleep(RETRY_TIME)
 
-            except ValueError as error:
-                ValueError('ошибка')
-                message = f'Сбой в работе программы: {error}'
-                if message not in messages_error:
-                    messages_error.append(message)
-                Exception(message)
-                send_message(bot, message)
-                # time.sleep(run_time_10)
-                time.sleep(RETRY_TIME)
+        except ValueError as error:
+            ValueError('ошибка')
+            message = f'Сбой в работе программы: {error}'
+            if message not in messages_error:
+                messages_error.append(message)
+            Exception(message)
+            send_message(bot, message)
+            # time.sleep(run_time_10)
+            time.sleep(RETRY_TIME)
         else:
             # time.sleep(run_time_10)
             time.sleep(RETRY_TIME)

@@ -14,6 +14,6 @@ def get_stream_handler():
 
 def get_logger(name):
     logger = logging.getLogger(name)
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.DEBUG)
     logger.addHandler(get_stream_handler())
     return logger
