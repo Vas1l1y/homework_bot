@@ -1,4 +1,3 @@
-import logging
 import os
 
 import requests
@@ -6,7 +5,6 @@ import time
 import telegram
 from dotenv import load_dotenv
 import app_logger
-from pprint import pprint
 
 logger = app_logger.get_logger(__name__)
 
@@ -33,7 +31,7 @@ messages_error = []
 
 
 def send_message(bot, message_tg):
-    """Отправляет сообщение в Telegram чат"""
+    """Отправляет сообщение в Telegram чат."""
     bot.send_message(
         chat_id=TELEGRAM_CHAT_ID,
         text=message_tg
@@ -44,7 +42,8 @@ def get_api_answer(current_timestamp):
     """Делает запрос эндпоинту API-сервиса.
     Параметр - временная метка.
     В случае успешного запроса должна вернуть ответ API.
-    Преобразовав из JSON в Python."""
+    Преобразовав из JSON в Python.
+    """
     timestamp = current_timestamp or int(time.time())
     params = {'from_date': timestamp}
     response = requests.get(ENDPOINT, headers=HEADERS, params=params)
@@ -179,9 +178,9 @@ def main():
                 send_message(bot, message)
                 # time.sleep(run_time_10)
                 time.sleep(RETRY_TIME)
-            else:
-                # time.sleep(run_time_10)
-                time.sleep(RETRY_TIME)
+            # else:
+            #     # time.sleep(run_time_10)
+            #     time.sleep(RETRY_TIME)
 
 
 if __name__ == '__main__':
