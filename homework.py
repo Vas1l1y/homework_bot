@@ -9,7 +9,6 @@ from dotenv import load_dotenv
 # import app_logger
 
 
-
 load_dotenv()
 
 
@@ -37,6 +36,7 @@ formatter = (
 
 
 def get_stream_handler():
+    """Настройка хендлера."""
     stream_handler = logging.StreamHandler()
     stream_handler.setLevel(logging.DEBUG)
     stream_handler.setFormatter(logging.Formatter(formatter))
@@ -44,6 +44,7 @@ def get_stream_handler():
 
 
 def get_logger(name):
+    """Настройка логирования."""
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)
     logger.addHandler(get_stream_handler())
@@ -56,7 +57,10 @@ def send_message(bot, message_tg):
         chat_id=TELEGRAM_CHAT_ID,
         text=message_tg
     )
+
+
 logger = get_logger(__name__)
+
 
 def get_api_answer(current_timestamp):
     """Делает запрос эндпоинту API-сервиса.
