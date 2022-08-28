@@ -1,3 +1,4 @@
+import logging
 import os
 
 import requests
@@ -178,9 +179,9 @@ def main():
                 send_message(bot, message)
                 # time.sleep(run_time_10)
                 time.sleep(RETRY_TIME)
-            # else:
-            #     # time.sleep(run_time_10)
-            #     time.sleep(RETRY_TIME)
+        else:
+            # time.sleep(run_time_10)
+            time.sleep(RETRY_TIME)
 
 
 if __name__ == '__main__':
