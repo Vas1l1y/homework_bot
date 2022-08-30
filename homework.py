@@ -174,8 +174,7 @@ def main():
         except ValueError as error:
             ValueError('ошибка')
             message = f'Сбой в работе программы: {error}'
-            if message not in messages_error:
-                messages_error.append(message)
+            logger.error(message)
             Exception(message)
             send_message(bot, message)
         else:
