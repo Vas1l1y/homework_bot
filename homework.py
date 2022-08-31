@@ -96,20 +96,17 @@ def check_response(response):
     if not isinstance(response, dict):
         raise KeyError(
                 'Ответ от API. Тип не словарь.'
-                f' response = {response}.'
-            )
+                f' response = {response}.')
     homeworks = response.get('homeworks')
     if 'homeworks' not in response or 'current_date' not in response:
         if not isinstance(homeworks, list):
             raise KeyError(
                 'В ответе от API под ключом "homeworks" пришел не список.'
-                f' response = {response}.'
-            )
+                f' response = {response}.')
         raise KeyError(
                 'В ответе от API присутствуют ключ(и) '
                 '"homeworks" и/или "current_date".'
-                f' response = {response}.'
-            )
+                f' response = {response}.')
     return homeworks
 
 
