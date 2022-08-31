@@ -134,8 +134,7 @@ def main():
     current_timestamp = int(time.time())
     if not check_tokens():
         sys.exit('Проверьте переменные окружения')
-    else:
-        bot = telegram.Bot(token=TELEGRAM_TOKEN)
+    bot = telegram.Bot(token=TELEGRAM_TOKEN)
     last_status = ''
     while True:
         try:
