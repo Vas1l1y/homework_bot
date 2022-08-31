@@ -94,20 +94,21 @@ def get_api_answer(current_timestamp):
 def check_response(response):
     """Проверяет ответ API на корректность."""
     if not isinstance(response, dict):
-        raise KeyError(
+        raise TypeError(
             'Ответ от API. Тип не словарь.'
             f' response = {response}.')
     homeworks = response.get('homeworks')
     if 'homeworks' not in response or 'current_date' not in response:
-        if not isinstance(homeworks, list):
-            raise KeyError(
-                'В ответе от API под ключом "homeworks" пришел не список.'
-                f' response = {response}.')
         raise KeyError(
             'В ответе от API присутствуют ключ(и) '
             '"homeworks" и/или "current_date".'
             f' response = {response}.')
+    if not isinstance(homeworks, list):
+        raise TypeError(
+            'В ответе от API под ключом "homeworks" пришел не список.'
+            f' response = {response}.')
     return homeworks
+
 
 
 def parse_status(homework):
